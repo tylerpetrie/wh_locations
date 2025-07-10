@@ -58,7 +58,7 @@ class AdvancedSearchWindow(ctk.CTkToplevel):
             hover_color=standard_hover, 
             text_color=standard_text, 
             text_color_disabled=standard_dtext,
-            width=120
+            width=self.app.get_scaled_size(120)
         )
         self.search_button.grid(row=0, column=1, pady=self.app.get_scaled_padding(5), sticky="e")
 
@@ -84,7 +84,7 @@ class AdvancedSearchWindow(ctk.CTkToplevel):
         self.results_tree.heading('barcode', text='Barcode')
         self.results_tree.heading('shelflocation', text='ShelfLoc')
 
-        self.results_tree.column('#0', width=0, stretch=tk.NO)
+        self.results_tree.column('#0', width=self.app.get_scaled_size(0), stretch=tk.NO)
         self.results_tree.column('sku', width=self.app.get_scaled_size(100), anchor=tk.W, stretch=tk.NO)
         self.results_tree.column('description', width=self.app.get_scaled_size(300), anchor=tk.W, stretch=tk.YES)
         self.results_tree.column('brand', width=self.app.get_scaled_size(100), anchor=tk.W, stretch=tk.NO)
@@ -144,7 +144,7 @@ class AdvancedSearchWindow(ctk.CTkToplevel):
             fg_color=destructive_fg, 
             hover_color=destructive_hover, 
             text_color=destructive_text,
-            border_color="black", border_width=1
+            border_color="black", border_width=self.app.get_scaled_size(1)
         )
         self.close_button.grid(row=0, column=1, padx=self.app.get_scaled_padding(5), pady=self.app.get_scaled_padding(5), sticky="e")
         
