@@ -38,7 +38,7 @@ class LocationResultsFrame(ctk.CTkFrame):
         self.top_frame.grid_rowconfigure(0, weight=1)
 
         # --- Box for Large Location Display (Column 0) ---
-        self.location_display_frame = ctk.CTkFrame(self.top_frame, border_width=2, width=self.app.get_scaled_size(180))
+        self.location_display_frame = ctk.CTkFrame(self.top_frame, border_width=self.app.get_scaled_size(2), width=self.app.get_scaled_size(180))
         self.location_display_frame.grid(row=0, column=0, padx=self.app.get_scaled_padding((10, 15)), pady=self.app.get_scaled_padding(5), sticky="ns"); self.location_display_frame.grid_propagate(False)
         self.location_display_frame.grid_rowconfigure(0, weight=1); self.location_display_frame.grid_columnconfigure(0, weight=1)
         self.location_display_label = ctk.CTkLabel(self.location_display_frame, text=self.location_code, font=ctk.CTkFont(size=48, weight="bold"), anchor="center")
@@ -125,7 +125,7 @@ class LocationResultsFrame(ctk.CTkFrame):
         self.header_first_stocked_label.grid(row=row_num, column=3, padx=self.app.get_scaled_padding(grid_padx), pady=self.app.get_scaled_padding(grid_pady), sticky="ew")
 
         # --- Notes Display Frame (Column 2 in top_frame) ---
-        self.notes_display_frame = ctk.CTkFrame(self.top_frame, border_width=1)
+        self.notes_display_frame = ctk.CTkFrame(self.top_frame, border_width=self.app.get_scaled_size(1))
         self.notes_display_frame.grid(row=0, column=2, padx=self.app.get_scaled_padding((0, 10)), pady=self.app.get_scaled_padding(5), sticky="nsew")
         self.notes_display_frame.grid_columnconfigure(0, weight=1); self.notes_display_frame.grid_rowconfigure(1, weight=1)
 
