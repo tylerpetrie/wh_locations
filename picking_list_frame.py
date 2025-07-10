@@ -64,7 +64,7 @@ class PickingListFrame(ctk.CTkFrame):
         style.configure("Treeview.Heading", font=self.app.get_treeview_font(size=self.tree_font_size + 1, weight="bold")) 
         style.configure("Treeview", rowheight=self.app.get_scaled_size(int(self.tree_font_size * 2.2)), font=self.app.get_treeview_font(size=self.tree_font_size))
 
-        self.picking_tree = ttk.Treeview(tree_frame, style="Picking.Treeview", show='headings', selectmode='browse', height=15)
+        self.picking_tree = ttk.Treeview(tree_frame, style="Picking.Treeview", show='headings', selectmode='browse', height=self.app.get_scaled_size(15))
         
         # Columns: Location (to pick from), SKU, Description, Brand, Qty@Loc, Replenished Qty (Input?), Action
         self.columns = ('pick_location', 'sku', 'description', 'brand', 'qty_at_loc', 'action_placeholder') 
