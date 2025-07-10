@@ -44,11 +44,11 @@ class AddUserWindow(ctk.CTkToplevel):
         self.button_height = self.app.get_scaled_size(30)
 
         positive_fg, positive_hover, positive_text, positive_dtext = self.app.get_button_color_config("positive")
-        self.button_save = ctk.CTkButton(self.button_frame, text="SAVE", font=self.button_font, height=self.button_height, command=self.save_user, width=self.app.get_scaled_size(100), fg_color=positive_fg, hover_color=positive_hover, text_color=positive_text, text_color_disabled=positive_dtext, border_color="black", border_width=1)
+        self.button_save = ctk.CTkButton(self.button_frame, text="SAVE", font=self.button_font, height=self.button_height, command=self.save_user, width=self.app.get_scaled_size(100), fg_color=positive_fg, hover_color=positive_hover, text_color=positive_text, text_color_disabled=positive_dtext, border_color="black", border_width=self.app.get_scaled_size(1))
         self.button_save.grid(row=0, column=0, padx=self.app.get_scaled_padding(5), pady=self.app.get_scaled_padding(10))
 
         destructive_fg, destructive_hover, destructive_text, destructive_dtext = self.app.get_button_color_config("destructive")
-        self.button_cancel = ctk.CTkButton(self.button_frame, text="CANCEL", font=self.button_font, height=self.button_height, command=self.destroy, width=self.app.get_scaled_size(100), fg_color=destructive_fg, hover_color=destructive_hover, text_color=destructive_text, text_color_disabled=destructive_dtext, border_color="black", border_width=1)
+        self.button_cancel = ctk.CTkButton(self.button_frame, text="CANCEL", font=self.button_font, height=self.button_height, command=self.destroy, width=self.app.get_scaled_size(100), fg_color=destructive_fg, hover_color=destructive_hover, text_color=destructive_text, text_color_disabled=destructive_dtext, border_color="black", border_width=self.app.get_scaled_size(1))
         self.button_cancel.grid(row=0, column=1, padx=self.app.get_scaled_padding(5), pady=self.app.get_scaled_padding(10))
 
         # Center the window relative to the main app
