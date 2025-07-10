@@ -82,9 +82,9 @@ class ExpiryReportOptionsWindow(ctk.CTkToplevel):
             self.action_button_frame, 
             text="Cancel", 
             command=self.destroy,
-            height=self.app.scaled_size(35),
+            height=self.app.get_scaled_size(35),
             fg_color=destructive_fg, hover_color=destructive_hover, text_color=destructive_text, text_color_disabled=destructive_dtext,
-            border_color="black", border_width=self.app.scaled_size(1)
+            border_color="black", border_width=self.app.get_scaled_size(1)
         )
         self.cancel_button.grid(row=0, column=1, padx=self.app.get_scaled_padding(5), pady=self.app.get_scaled_padding(5), sticky="w")
 
