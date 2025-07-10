@@ -81,7 +81,7 @@ class BatchSummaryOptionsWindow(ctk.CTkToplevel):
             button_frame, text="Cancel", command=self.destroy,
             font=self.button_font, height=self.button_height,
             fg_color=destructive_fg, hover_color=destructive_hover, text_color=destructive_text, text_color_disabled=destructive_dtext, 
-            border_color="black", border_width=1
+            border_color="black", border_width=self.app.get_scaled_size(1)
         )
         self.cancel_button.grid(row=0, column=1, padx=self.app.get_scaled_padding(10), sticky="w")
 
