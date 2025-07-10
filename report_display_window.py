@@ -41,8 +41,8 @@ class ReportDisplayWindow(ctk.CTkToplevel):
         # --- Treeview styling ---
         style = ttk.Style()
         style.map('Treeview', background=[('selected', '#A9CCE3')], foreground=[('selected', 'black')])
-        style.configure("Treeview.Heading", font=(self.tree_font_family, self.tree_font_size + 1))
-        style.configure("Treeview", rowheight=int(self.tree_font_size * 2.2), font=(self.tree_font_family, self.tree_font_size))
+        style.configure("Treeview.Heading", font=self.app.get_treeview_font(size=self.tree_font_size + 1, weight="bold"))
+        style.configure("Treeview", rowheight=self.app.get_scaled_size(int(self.tree_font_size * 2.2)), font=self.app.get_treeview_font(size=self.tree_font_size))
         self.tree = ttk.Treeview(tree_frame, style="Treeview", show='headings', selectmode='browse')
         
         col_ids = [c['id'] for c in columns_config]
@@ -94,63 +94,47 @@ class ReportDisplayWindow(ctk.CTkToplevel):
     
     def auto_resize_columns_and_window(self):
         """Measures content and resizes Treeview columns and the window to fit."""
-        heading_font_tuple = self.app.get_treeview_font(size=self.tree_font_size + 1)
-        content_font_tuple = self.app.get_treeview_font(size=self.tree_font_size)
-        heading_font = tkfont.Font(family=heading_font_tuple[0], size=heading_font_tuple[1])
-        content_font = tkfont.Font(family=content_font_tuple[0], size=content_font_tuple[1])
+        # Use tkfont for accurate measurement
+        heading_font = tkfont.Font(font=self.app.get_treeview_font(size=self.tree_font_size + 1, weight="bold"))
+        content_font = tkfont.Font(font=self.app.get_treeview_font(size=self.tree_font_size))
 
         total_width = 0
         for col_id in self.tree['columns']:
+            # Start with heading width
             max_width = heading_font.measure(self.tree.heading(col_id)['text'])
 
+            # Check content width
             for item_id in self.tree.get_children():
-                cell_value = self.tree.item(item_id, 'values')[self.tree['columns'].index(col_id)]
-                cell_width = content_font.measure(str(cell_value))
-                if cell_width > max_width:
-                    max_width = cell_width
-            
-            padded_width = max_width + self.app.get_scaled_size(20)
-            
+                try:
+                    cell_value = self.tree.item(item_id, 'values')[self.tree['columns'].index(col_id)]
+                    cell_width = content_font.measure(str(cell_value))
+                    if cell_width > max_width:
+                        max_width = cell_width
+                except (IndexError, ValueError):
+                    continue # Skip if value is not present
+
+            # Apply padding and set column width
+            padded_width = max_width + self.app.get_scaled_size(25) # Added a bit more padding
             self.tree.column(col_id, width=padded_width)
             total_width += padded_width
         
         # --- Resize the window ---
-        window_padding = self.app.get_scaled_size(60)
-        
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
-        # Calculate final window width, but don't exceed screen width
-        final_width = min(total_width + window_padding, screen_width - self.app.get_scaled_size(50))
+        # Add padding for scrollbar and window borders
+        final_width = total_width + self.app.get_scaled_size(60)
+        final_width = min(final_width, int(screen_width * 0.9)) # Don't exceed 90% of screen width
 
-        MAX_HEIGHT_FRACTION = 0.85 
-        max_pixel_height = int(screen_height * MAX_HEIGHT_FRACTION)
-
-        # Calculate the desired height based on content
+        # Calculate height based on rows
         num_rows = len(self.tree.get_children())
         row_height = self.app.get_scaled_size(int(self.tree_font_size * 2.2))
         header_height = self.app.get_scaled_size(30)
-        bottom_button_height = self.app.get_scaled_size(80) # Includes button and padding
-        
-        # Calculate the ideal height the content needs
-        content_based_height = (num_rows * row_height) + header_height + bottom_button_height
+        bottom_ui_height = self.app.get_scaled_size(80) # Account for button and padding
 
-        # Choose the smaller of the two: the ideal height or the maximum allowed height
-        final_height = min(content_based_height, max_pixel_height)
-        
-        # Also, ensure a minimum height so tiny reports still look like a window
-        final_height = max(final_height, self.app.get_scaled_size(300))
-        
-        # Keep a reasonable default height, or calculate it based on number of rows
-        num_rows = len(self.tree.get_children())
-        row_height = self.app.get_scaled_size(int(self.tree_font_size * 2.2))
-        header_height = self.app.get_scaled_size(30)
-        bottom_button_height = self.app.get_scaled_size(80)
-        
-        # Calculate final window height
-        final_height = (num_rows * row_height) + header_height + bottom_button_height + self.app.get_scaled_size(50)
-        final_height = min(final_height, screen_height - 100)
-        final_height = max(final_height, 300)
+        final_height = (num_rows * row_height) + header_height + bottom_ui_height
+        final_height = min(final_height, int(screen_height * 0.85)) # Don't exceed 85% of screen height
+        final_height = max(final_height, self.app.get_scaled_size(300)) # Minimum height
 
         # Center the window with the new dimensions
         self.update_idletasks()
