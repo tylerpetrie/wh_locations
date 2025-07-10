@@ -62,7 +62,7 @@ class MainPageFrame(ctk.CTkFrame):
 
 
         # --- Vertical Separator (Middle Column of top_search_area_frame) ---
-        separator_vertical = ctk.CTkFrame(self.top_search_area_frame, width=2, fg_color="gray50")
+        separator_vertical = ctk.CTkFrame(self.top_search_area_frame, width=self.app.get_scaled_size(2), fg_color="gray50")
         separator_vertical.grid(row=0, column=1, padx=self.app.get_scaled_padding(10), pady=self.app.get_scaled_padding(5), sticky="ns")
 
 
@@ -92,7 +92,7 @@ class MainPageFrame(ctk.CTkFrame):
         self.item_search_button.grid(row=2, column=0, padx=self.app.get_scaled_padding(5), pady=self.app.get_scaled_padding((5, 10)))
 
         # --- Horizontal Separator (Row 2) ---
-        separator_horizontal = ctk.CTkFrame(self, height=2, fg_color="gray50")
+        separator_horizontal = ctk.CTkFrame(self, height=self.app.get_scaled_size(2), fg_color="gray50")
         separator_horizontal.grid(row=2, column=0, padx=self.app.get_scaled_padding(20), pady=self.app.get_scaled_padding(10), sticky="ew")
 
         # --- Bottom Search Area (Row 3) ---
