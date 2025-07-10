@@ -64,16 +64,16 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
+        # --- 1. SCALING FACTOR
         self.scaling_factor = ctk.ScalingTracker.get_widget_scaling(self)
 
-        messagebox.showinfo("Debug Info", f"Detected Scaling Factor: {self.scaling_factor}")
+        # messagebox.showinfo("Debug Info", f"Detected Scaling Factor: {self.scaling_factor}")
 
-        # --- Configure Window ---
+        # --- 2. Configure Window ---
         self.title("Warehouse Location Manager")
-        # self.geometry("500x380") # Adjust size as needed
         self.resizable(False, False) # Prevent resizing for simpler layout initially
 
-        # --- App State ---
+        # --- 3. App State ---
         self.current_user_id = None
         self.current_username = None
         self.main_page_frame = None
@@ -85,22 +85,21 @@ class App(ctk.CTk):
         self.picking_list_frame = None
         self.picking_list_escape_id = None
         
-        # --- Button Colour Palette ---
+        # --- 4. Button Colour Palette ---
         self.button_colors = {}
         self.initialize_button_colors()
-        # Fallback to "standard" or a very generic grey
         self.get_button_color_config = lambda role_name: self.button_colors.get(
             role_name, 
             self.button_colors.get("standard")
         )
 
-        # --- Database Connection ---
-        self.sql_server_driver = self.find_sql_server_driver() # <<< NEW: Find driver on startup
+        # --- 5. Database Connection ---
+        self.sql_server_driver = self.find_sql_server_driver()
         if not self.sql_server_driver:
             self.after(100, self.destroy)
             return
             
-        self.conn = self.connect_db() # <<< This now uses the dynamically found driver
+        self.conn = self.connect_db()
         
         if self.conn:
             self.create_default_admin_if_needed()
@@ -108,57 +107,56 @@ class App(ctk.CTk):
             self.after(100, self.destroy)
             return
 
-        # --- Create and Show Login Frame ---
+        # --- 6. Create and Show Login Frame ---
         self.login_frame = LoginFrame(master=self, app_instance=self) # Pass App instance
         self.login_frame.pack(pady=self.get_scaled_padding(20), padx=self.get_scaled_padding(60), fill="both", expand=True)
 
-        # --- Center the window ---
-        # self.center_window()
+        # --- 7. Center the window ---
         self.set_optimal_window_size(base_width=500, base_height=420)
 
-    # def center_window(self):
-    #     self.update_idletasks() # Update geometry info
-    #     width = self.winfo_width()
-    #     height = self.winfo_height()
-    #     x = (self.winfo_screenwidth() // 2) - (width // 2)
-    #     y = (self.winfo_screenheight() // 2) - (height // 2)
-    #     self.geometry(f'{width}x{height}+{x}+{y}')
+        # --- 8. Terminate on close (x)
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
-    def get_font(self, name="default", size=12, weight="normal", slant="roman"):
-        """Returns a CTkFont object with a DPI-scaled size."""
+        # --- Scaling Helper Methods
+    def get_font(self, size=12, weight="normal", slant="roman"):
+        """
+        Returns a CTkFont object with a DPI-scaled size.
+        (Refined: Removed unused 'name' parameter for clarity).
+        """
         scaled_size = int(size * self.scaling_factor)
         return ctk.CTkFont(family="Segoe UI", size=scaled_size, weight=weight, slant=slant)
 
     def get_treeview_font(self, size=11, weight="normal"):
-        """Returns a tuple for ttk.Style with a DPI-scaled size."""
+        """
+        Returns a tuple for ttk.Style with a DPI-scaled size.
+        (Refined: Added a minimum size to prevent fonts from becoming unreadably small).
+        """
         scaled_size = int(size * self.scaling_factor)
-        font_family = "Segoe UI"
-        if weight == "bold":
-            return (font_family, scaled_size, "bold")
-        return (font_family, scaled_size)
+        # Ensure font is not too small on high-res screens with fractional scaling
+        scaled_size = max(8, scaled_size) 
+        return ("Segoe UI", scaled_size, weight)
 
     def get_scaled_size(self, size):
         """Returns a DPI-scaled version of a given integer size."""
         return int(size * self.scaling_factor)
     
-    
     def get_scaled_padding(self, padding):
         """
-        Returns a DPI-scaled version of a padding value.
-        Handles both integers and tuples.
+        Returns a DPI-scaled version of a padding value. Handles both integers and tuples.
+        (Your implementation is correct).
         """
         if isinstance(padding, tuple):
-            # Scale each element in the tuple
             return (int(padding[0] * self.scaling_factor), int(padding[1] * self.scaling_factor))
         elif isinstance(padding, (int, float)):
-            # Scale the single number
             return int(padding * self.scaling_factor)
         else:
-            # Return the original value if it's not a supported type
             return padding
         
     def set_optimal_window_size(self, base_width, base_height):
-        """Resizes the main window to a scaled size and re-centers it on the screen."""
+        """
+        Resizes the main window to a scaled size and re-centers it on the screen.
+        (Your implementation is correct).
+        """
         self.update_idletasks()
 
         width = self.get_scaled_size(base_width)
